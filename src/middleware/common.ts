@@ -14,4 +14,4 @@ export const handleBodyRequestParsing = (router: Router) => {
 
 export const handleCompression = (router: Router) => {
   router.use(compression());
-}
+};

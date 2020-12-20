@@ -1,11 +1,15 @@
+import { error } from "console";
 import { Request, Response } from "express";
+import { HTTP400Error, HTTP401Error } from "../../utils/httpErrors";
 
 export default [
   {
-    path: '/',
-    method: 'get',
+    path: "/",
+    method: "get",
     handler: async (req: Request, res: Response) => {
-      res.send('Hello world!');
-    }
-  }
-]
+      let err = new HTTP400Error();
+      console.log("err", err.name);
+      throw err;
+    },
+  },
+];

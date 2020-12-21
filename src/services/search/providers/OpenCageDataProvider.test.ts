@@ -12,6 +12,6 @@ describe("OpenCageDataProvider", () => {
 
   test("an invalid non-json response", async () => {
     (request as any).mockImplementation(() => "Service Unavailable.");
-    await expect(getPlaces("Chamonix")).rejects.toThrow("Service Unavailable.");
+    await expect(getPlaces("Chamonix")).rejects.toThrow(SyntaxError);
   });
 });

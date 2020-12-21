@@ -26,6 +26,9 @@
       "node"
     ]
   },
+  "modulePathIgnorePatterns": [
+    "<rootDir>/dist/"
+  ],
   "devDependencies": {
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.9",

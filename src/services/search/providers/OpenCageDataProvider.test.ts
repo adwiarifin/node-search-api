@@ -1,17 +1,18 @@
-import request from "request-promise";
+import axios from "axios";
 import { getPlaces } from "./OpenCageDataProvider";
 
-jest.mock("request-promise");
+jest.mock("axios");
+const mockedAxios = axios as any;
 
 describe("OpenCageDataProvider", () => {
   test("an empty query string", async () => {
-    (request as any).mockImplementation(() => '{"features": []}');
+    mockedAxios.get.mockResolvedValue({ data: { features: [] } });
     const result = await getPlaces("Paris");
     expect(result).toEqual({ features: [] });
   });
 
   test("an invalid non-json response", async () => {
-    (request as any).mockImplementation(() => "Service Unavailable.");
-    await expect(getPlaces("Chamonix")).rejects.toThrow(SyntaxError);
+    mockedAxios.get.mockRejectedValue(new Error("Service Unavailable."));
+    await expect(getPlaces("Chamonix")).rejects.toThrow("Service Unavailable.");
   });
 });

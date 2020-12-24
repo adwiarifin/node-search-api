@@ -1,6 +1,6 @@
 import http from "http";
 import express from "express";
-import 'express-async-errors';
+import "express-async-errors";
 import { applyMiddleware, applyRoutes } from "./utils";
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
@@ -10,7 +10,7 @@ import { logger } from "./config/logger";
 
 process.on("uncaughtException", (e) => {
   logger.error({
-    message: 'uncaughtException',
+    message: "uncaughtException",
     extra: e,
   });
   process.exit(1);
@@ -18,7 +18,7 @@ process.on("uncaughtException", (e) => {
 
 process.on("unhandledRejection", (e) => {
   logger.error({
-    message: 'unhandledRejection',
+    message: "unhandledRejection",
     extra: e,
   });
   process.exit(1);

@@ -40,4 +40,4 @@ describe("routes", () => {
     const response = await request(router).get("/api/v1/search?q=");
     expect(response.status).toEqual(400);
   });
-})
+});

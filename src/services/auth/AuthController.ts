@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import dotenv from 'dotenv';
-import randtoken from 'rand-token';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import randtoken from "rand-token";
 import { HTTP400Error, HTTP401Error } from "../../utils/httpErrors";
 
 dotenv.config();
@@ -22,12 +22,12 @@ export const registerNewUser = (email: string, password: string) => {
   users.set(email, { hash_password, id, refreshToken });
 
   const accessToken = jwt.sign({ sub: id }, JWT_SECRET, {
-    algorithm: 'HS256',
+    algorithm: "HS256",
     expiresIn: 300,
   });
 
   return { accessToken, refreshToken };
-}
+};
 
 export const authenticate = (email: string, password: string) => {
   if (!email || !password) {
@@ -40,18 +40,18 @@ export const authenticate = (email: string, password: string) => {
   }
 
   const accessToken = jwt.sign({ sub: user.id }, JWT_SECRET, {
-    algorithm: 'HS256',
+    algorithm: "HS256",
     expiresIn: 300,
   });
 
   const { refreshToken } = user;
 
   return { accessToken, refreshToken };
-}
+};
 
 export const generateAccessToken = (refreshToken: string) => {
   const user = Array.from(users.values()).find(
-    (it) => it.refreshToken == refreshToken,
+    (it) => it.refreshToken == refreshToken
   );
 
   if (!user) {
@@ -59,9 +59,9 @@ export const generateAccessToken = (refreshToken: string) => {
   }
 
   const accessToken = jwt.sign({ sub: user.id }, JWT_SECRET, {
-    algorithm: 'HS256',
+    algorithm: "HS256",
     expiresIn: 300,
   });
 
   return accessToken;
-}
+};

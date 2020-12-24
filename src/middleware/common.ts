@@ -2,7 +2,7 @@ import { Router } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import compression from "compression";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
 export const handleCors = (router: Router) => {
   router.use(cors({ credentials: true, origin: true }));
@@ -19,4 +19,4 @@ export const handleCompression = (router: Router) => {
 
 export const handleCookie = (router: Router) => {
   router.use(cookieParser());
-}
+};

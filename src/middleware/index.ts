@@ -6,13 +6,13 @@ import {
 } from "./common";
 
 import { handleAPIDocs } from "./apiDocs";
-
 import {
   handleCSRF,
   handleHTTPHeaders,
   handleJSONBodyLimit,
   handleRateLimit,
 } from "./security";
+import { handleLogging } from "./logging";
 
 export default [
   handleCors,
@@ -24,4 +24,5 @@ export default [
   handleJSONBodyLimit,
   handleHTTPHeaders,
   handleCSRF,
+  handleLogging,
 ];

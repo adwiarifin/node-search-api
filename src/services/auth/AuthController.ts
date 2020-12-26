@@ -3,38 +3,42 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import randtoken from "rand-token";
 import { HTTP400Error, HTTP401Error } from "../../utils/httpErrors";
+import { createUser, getByEmail, getByRefreshToken } from "./AuthModel";
 
 dotenv.config();
 
-let id = 1;
-const getId = () => id++;
-const users = new Map();
 const JWT_SECRET = process.env.JWT_SECRET_KEY as string;
 
-export const registerNewUser = (email: string, password: string) => {
+export const registerNewUser = async (email: string, password: string) => {
   if (!email || !password) {
     throw new HTTP400Error();
   }
 
-  const hash_password = bcrypt.hashSync(password, 8);
+  const hashPassword = bcrypt.hashSync(password, 8);
   const refreshToken = randtoken.uid(256);
-  const id = getId();
-  users.set(email, { hash_password, id, refreshToken });
 
-  const accessToken = jwt.sign({ sub: id }, JWT_SECRET, {
-    algorithm: "HS256",
-    expiresIn: 300,
-  });
+  try {
+    console.log('hashPassword:', hashPassword.length);
+    console.log('refreshToken:', refreshToken.length);
+    const id = await createUser(email, hashPassword, refreshToken);
 
-  return { accessToken, refreshToken };
+    const accessToken = jwt.sign({ sub: id }, JWT_SECRET, {
+      algorithm: "HS256",
+      expiresIn: 300,
+    });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new HTTP400Error("This email already exists");
+  }
 };
 
-export const authenticate = (email: string, password: string) => {
+export const authenticate = async (email: string, password: string) => {
   if (!email || !password) {
     throw new HTTP400Error();
   }
 
-  const user = users.get(email);
+  const user = await getByEmail(email);
   if (!user || !bcrypt.compareSync(password, user.hash_password)) {
     throw new HTTP401Error();
   }
@@ -44,16 +48,11 @@ export const authenticate = (email: string, password: string) => {
     expiresIn: 300,
   });
 
-  const { refreshToken } = user;
-
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken: user.refresh_token };
 };
 
-export const generateAccessToken = (refreshToken: string) => {
-  const user = Array.from(users.values()).find(
-    (it) => it.refreshToken == refreshToken
-  );
-
+export const generateAccessToken = async (refreshToken: string) => {
+  const user = await getByRefreshToken(refreshToken);
   if (!user) {
     throw new HTTP401Error();
   }

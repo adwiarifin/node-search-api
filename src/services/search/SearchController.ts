@@ -1,4 +1,5 @@
 import { redisClient } from "../../config/cache";
+import { publish } from "../../config/messenger";
 import { getPlaces } from "./providers/OpenCageDataProvider";
 
 export const getPlacesByName = async (q: string) => {
@@ -10,7 +11,9 @@ export const getPlacesByName = async (q: string) => {
   }
 
   const result = await getPlaces(q);
-  redisClient.setex(q, 3600, JSON.stringify(result));
+  publish(result);
+  const key = 'search-' + q;
+  redisClient.setex(key, 3600, JSON.stringify(result));
 
   return result;
 };

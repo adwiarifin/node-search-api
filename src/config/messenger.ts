@@ -3,10 +3,11 @@ import { logger } from "./logger";
 
 let channel: Channel;
 const exchange = "places";
+const { MESSENGER_CONNECTION } = process.env;
 
 const init = async () =>
   new Promise((resolved, rejected) => {
-    amqp.connect("amqp://guest:guest@127.0.0.1", (err, connection) => {
+    amqp.connect(MESSENGER_CONNECTION as string, (err, connection) => {
 
       if (err) {
         return rejected(err);

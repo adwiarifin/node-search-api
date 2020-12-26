@@ -4,8 +4,10 @@ import { logger } from "./logger";
 
 dotenv.config();
 
+const { CACHE_CONNECTION = "redis://localhost:6379" } = process.env;
+
 const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || "127.0.0.1",
+  url: CACHE_CONNECTION,
 });
 
 const init = async () =>

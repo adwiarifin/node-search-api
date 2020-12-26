@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const dbClient = new Client(process.env.DB_CONNECTION);
+const { DATABASE_CONNECTION } = process.env;
+
+const dbClient = new Client({
+  connectionString: DATABASE_CONNECTION,
+});
 
 dbClient.on("error", (err: Error) => {
   logger.info({
